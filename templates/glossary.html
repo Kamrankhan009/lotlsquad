@@ -1,0 +1,78 @@
+{%extends 'base.html' %}
+{%block content%}
+
+
+
+<div class="container">
+<!-- to be filled by the Python script -->
+<div class="row">
+  <div class="col">
+    <h1>{{ the_title }}</h1>
+  </div>
+</div>
+
+<!-- note how items from the "static" folder are linked -->
+
+  <div class="row">
+    <div class="col">
+      <div style="background-color: rgba(255,0,0,0.1);">
+        <img alt="Photo: Melanoid Leucistic Axolotl" class="img-fluid rounded" src="{{ url_for('static', filename='images/baby_two_wilds_front.png') }}">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <p class="credit">Two baby wilds: Attempted Macro by John</p>
+
+      <p><strong>If you have a word you'd like to add (or edit) please reach out!</strong></p>
+
+      <!-- linking to an exact spot on page was found on stackoverflow https://stackoverflow.com/questions/35843675/link-to-a-specific-location-in-a-flask-template -->
+      {% for item in glossary_items | sort(attribute='word') %}
+      <section id="{{ item['word'] | lower | replace(' ', '_') }}"><h2><span class="badge badge-secondary">{{ item['word'] }}</span></h2></section>
+      <p><em>
+        {% if item['bold_italics_section'] %}
+          <strong>{{ item['bold_italics_section'] }}...</strong>
+        {% endif %}
+        {% if item['italics_section'] %}
+          {{ item['italics_section'] }}: 
+        {% endif %}
+      </em>{{ item['regular_section'] }}</p>
+
+      {% if item['bold_italics_section_2'] or item['italics_section_2'] or item['regular_section_2'] %}
+        <p> <em>  {% if item['bold_italics_section_2'] %}
+                    <strong>{{ item['bold_italics_section_2'] }}...</strong>
+                  {% endif %}
+                  {% if item['italics_section_2'] %}
+                    {{ item['italics_section_2'] }}:
+                  {% endif %}
+            </em>
+                  {% if item['regular_section_2'] %}
+                    {{ item['regular_section_2'] }}
+                  {% endif %}
+                </p>
+      {% endif %}
+      {% if item['image_filename'] and item['image_alt'] %}
+      <div class="row">
+        <div class="col">
+            <img alt="{{ item['image_alt'] }}" class="img-fluid rounded max-width=50" src="{{ url_for('static', filename='images/' ~ item['image_filename']) }}">
+        </div>
+        <div class="col">
+            {% if item['image_filename_2'] and item['image_alt_2'] %}
+            <img alt="{{ item['image_alt_2']}}" class="img-fluid rounded max-width=50" src="{{ url_for('static', filename='images/' ~ item['image_filename_2'])}}">
+            {% endif %}
+        </div>
+    </div>
+      {% endif %}
+      <br>
+  {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+{%endblock%}
